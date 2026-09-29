@@ -1,0 +1,15 @@
+# Dependencies & Environments
+node_modules/
+.next/
+dist/
+build/
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.env
+.env.local
+.DS_Store
+*.log
+.dart_tool/
+.flutter-plugins

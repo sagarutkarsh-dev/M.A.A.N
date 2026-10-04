@@ -91,7 +91,49 @@ async def upload_inspection(
     eeprom_match = (instrument.eeprom_counter.strip().upper() == eeprom_counter_sync.strip().upper())
     binding_ok = serial_match and hologram_match and eeprom_match and wire_seal_intact
 
-    # 3. Handle File Uploads
+    # 3. Evaluate MPE results on the server only (never trust a client-sent verdict).
+    # Done BEFORE saving files so rejected requests leave nothing on disk.
+    if not turning_point_results:
+        raise HTTPException(status_code=422, detail="turning_point_results is required")
+    try:
+        parsed_tests = json.loads(turning_point_results)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=422, detail="turning_point_results must be valid JSON")
+    if not isinstance(parsed_tests, list) or not parsed_tests:
+        raise HTTPException(status_code=422, detail="turning_point_results must be a non-empty list")
+
+    mpe_pass = True
+    for t in parsed_tests:
+        required = ("load_mass", "indicated_mass", "scale_interval_e")
+        if not isinstance(t, dict) or not all(k in t for k in required):
+            raise HTTPException(status_code=422, detail=f"Each test needs: {', '.join(required)}")
+        try:
+            scale_e = float(t["scale_interval_e"])
+            delta_l_val = float(t.get("delta_l", 0.0))
+            load_val = float(t["load_mass"])
+            # If scale_interval_e is in kg (e.g. 0.005) but delta_l was submitted in grams (e.g. 1.5)
+            if scale_e < 0.1 and delta_l_val >= 0.1:
+                delta_l_val = delta_l_val / 1000.0
+            # If scale_interval_e was submitted in grams (e.g. 5.0) while load is in kg (e.g. 10.0)
+            if load_val >= 1.0 and scale_e >= 1.0:
+                scale_e = scale_e / 1000.0
+                delta_l_val = delta_l_val / 1000.0
+
+            eval_res = MPEToleranceEngine.evaluate_turning_point_load(
+                accuracy_class=instrument.accuracy_class,
+                load_mass=load_val,
+                indicated_mass=float(t["indicated_mass"]),
+                delta_l=delta_l_val,
+                scale_interval_e=scale_e,
+                inspection_type=InspectionType.IN_SERVICE,
+                zero_error=float(t.get("zero_error", 0.0)),
+            )
+        except (ValueError, TypeError) as e:
+            raise HTTPException(status_code=422, detail=f"Invalid test data: {e}")
+        if not eval_res["is_compliant"]:
+            mpe_pass = False
+
+    # 4. Handle File Uploads
     upload_dir = Path(settings.UPLOAD_DIR)
     upload_dir.mkdir(parents=True, exist_ok=True)
 
@@ -110,45 +152,6 @@ async def upload_inspection(
     wire_seal_photo_url = await save_uploaded(wire_seal_photo, "wire_seal")
     hologram_photo_url = await save_uploaded(hologram_photo, "hologram")
     legacy_cert_photo_url = await save_uploaded(legacy_cert_photo, "legacy_cert")
-
-    # 4. Evaluate MPE Test Load Results
-    mpe_pass = True
-    if turning_point_results:
-        try:
-            parsed_tests = json.loads(turning_point_results)
-            if isinstance(parsed_tests, list):
-                for t in parsed_tests:
-                    # Check pre-evaluated status
-                    if t.get("status") == "FAIL" or t.get("is_pass") is False:
-                        mpe_pass = False
-                        break
-                    # If raw parameters are provided, evaluate via MPEToleranceEngine
-                    if "load_mass" in t and "indicated_mass" in t and "scale_interval_e" in t:
-                        scale_e = float(t["scale_interval_e"])
-                        delta_l_val = float(t.get("delta_l", 0.0))
-                        load_val = float(t["load_mass"])
-                        # If scale_interval_e is in kg (e.g. 0.005) but delta_l was submitted in grams (e.g. 1.5)
-                        if scale_e < 0.1 and delta_l_val >= 0.1:
-                            delta_l_val = delta_l_val / 1000.0
-                        # If scale_interval_e was submitted in grams (e.g. 5.0) while load is in kg (e.g. 10.0)
-                        if load_val >= 1.0 and scale_e >= 1.0:
-                            scale_e = scale_e / 1000.0
-                            delta_l_val = delta_l_val / 1000.0
-
-                        eval_res = MPEToleranceEngine.evaluate_turning_point_load(
-                            accuracy_class=instrument.accuracy_class,
-                            load_mass=load_val,
-                            indicated_mass=float(t["indicated_mass"]),
-                            delta_l=delta_l_val,
-                            scale_interval_e=scale_e,
-                            inspection_type=InspectionType.IN_SERVICE,
-                            zero_error=float(t.get("zero_error", 0.0)),
-                        )
-                        if not eval_res["is_compliant"]:
-                            mpe_pass = False
-                            break
-        except Exception:
-            pass
 
     # Overall statutory pass verdict
     is_passed = binding_ok and mpe_pass

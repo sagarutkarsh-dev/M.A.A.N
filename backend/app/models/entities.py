@@ -18,8 +18,8 @@ class Trader(Base):
     longitude = Column(Float, nullable=True, default=75.7804)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
-    instruments = relationship("Instrument", back_populates="trader")
-    certificates = relationship("Certificate", back_populates="trader")
+    instruments = relationship("Instrument", back_populates="trader", lazy="selectin")
+    certificates = relationship("Certificate", back_populates="trader", lazy="selectin")
 
 class Instrument(Base):
     __tablename__ = "instruments"
@@ -38,9 +38,9 @@ class Instrument(Base):
     status = Column(String(50), default="ACTIVE")
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
-    trader = relationship("Trader", back_populates="instruments")
-    inspections = relationship("InspectionRecord", back_populates="instrument")
-    certificates = relationship("Certificate", back_populates="instrument")
+    trader = relationship("Trader", back_populates="instruments", lazy="selectin")
+    inspections = relationship("InspectionRecord", back_populates="instrument", lazy="selectin")
+    certificates = relationship("Certificate", back_populates="instrument", lazy="selectin")
 
 class InspectionRecord(Base):
     __tablename__ = "inspection_records"
@@ -64,7 +64,7 @@ class InspectionRecord(Base):
     remarks = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
-    instrument = relationship("Instrument", back_populates="inspections")
+    instrument = relationship("Instrument", back_populates="inspections", lazy="selectin")
 
 class Certificate(Base):
     __tablename__ = "certificates"
@@ -86,8 +86,8 @@ class Certificate(Base):
     wire_seal_photo_url = Column(String(500), nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
-    instrument = relationship("Instrument", back_populates="certificates")
-    trader = relationship("Trader", back_populates="certificates")
+    instrument = relationship("Instrument", back_populates="certificates", lazy="selectin")
+    trader = relationship("Trader", back_populates="certificates", lazy="selectin")
 
 # Alias for Inspection
 Inspection = InspectionRecord

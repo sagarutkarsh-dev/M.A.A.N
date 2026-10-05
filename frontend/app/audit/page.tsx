@@ -3,7 +3,7 @@
 import React from 'react';
 import { Scale, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import CitizenPublicAudit from '@/components/CitizenPublicAudit';
+import CitizenPublicAudit from '../../components/CitizenPublicAudit';
 
 export default function CitizenAuditPage() {
   return (

@@ -3,13 +3,15 @@
 import React from 'react';
 import Link from 'next/link';
 import { ShieldCheck, Search, Store, Smartphone } from 'lucide-react';
+import Navbar from '@/components/Navbar';
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-slate-50 font-sans selection:bg-emerald-200">
+      <Navbar />
 
       {/* Hero Section */}
-      <main className="max-w-5xl mx-auto px-6 pt-24 pb-16 text-center">
+      <main className="max-w-5xl mx-auto px-6 pt-16 sm:pt-20 pb-16 text-center">
         <div className="inline-flex items-center space-x-2 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-sm font-medium mb-8 border border-emerald-200">
           <ShieldCheck className="w-4 h-4" />
           <span>Statutory Engine for Legal Metrology Act, 2009</span>
@@ -57,7 +59,7 @@ export default function Home() {
             </div>
             <h3 className="text-lg font-bold text-zinc-900 mb-2">Trader Self-Service</h3>
             <p className="text-sm text-slate-500 mb-6">Declare assets, monitor Rule 27 statutory cadences, and generate automated e-Challans.</p>
-            <Link href="/register" className="text-blue-600 text-sm font-semibold hover:text-blue-700">Open Merchant Desk &rarr;</Link>
+            <Link href="/login" className="text-blue-600 text-sm font-semibold hover:text-blue-700">Open Merchant Desk &rarr;</Link>
           </div>
 
           {/* Card 3 */}

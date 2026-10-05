@@ -72,8 +72,8 @@ export default function CitizenAuditPage() {
               <div className="space-y-6 text-center">
                 <div className="relative w-full h-64 bg-slate-900 rounded-xl overflow-hidden flex flex-col items-center justify-center border border-slate-800 shadow-inner">
                   {/* Simulated Viewfinder Target Box */}
-                  <div className="w-40 h-40 border-2 border-dashed border-emerald-400 rounded-xl flex items-center justify-center animate-pulse">
-                    <QrCode className="w-12 h-12 text-emerald-400/50" />
+                  <div className="w-40 h-40 border-2 border-dashed border-emerald-500 rounded-xl flex items-center justify-center animate-pulse">
+                    <QrCode className="w-12 h-12 text-emerald-500/50" />
                   </div>
                   <p className="text-xs text-slate-400 mt-4">Align the Holographic QR sticker inside the frame</p>
                 </div>

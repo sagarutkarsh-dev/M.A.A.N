@@ -34,7 +34,7 @@ export default function TraderRegistration() {
                     setLocation(`Lat: ${lat}, Lng: ${lng}`);
                     setIsLocating(false);
                 },
-                (error) => {
+                () => {
                     setLocation('Location access denied or unavailable.');
                     setIsLocating(false);
                 }
@@ -294,7 +294,7 @@ export default function TraderRegistration() {
                                             Upload Photo
                                         </button>
                                     </div>
-                                    <p className="text-xs text-slate-500">Uploading the serial number plate pre-fills data for the LMO's field app.</p>
+                                    <p className="text-xs text-slate-500">Uploading the serial number plate pre-fills data for the LMO&apos;s field app.</p>
                                 </div>
                             </div>
                         )}
@@ -304,7 +304,7 @@ export default function TraderRegistration() {
                             <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                                 <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5">
                                     <h3 className="text-lg font-bold text-zinc-900 mb-1">Review Application</h3>
-                                    <p className="text-sm text-emerald-800">Please verify your details. Once submitted, these will be locked for the LMO's field inspection.</p>
+                                    <p className="text-sm text-emerald-800">Please verify your details. Once submitted, these will be locked for the LMO&apos;s field inspection.</p>
                                 </div>
                                 
                                 <div className="bg-slate-50 rounded-lg p-6 border border-slate-200 space-y-5">

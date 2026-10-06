@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
@@ -12,8 +12,16 @@ import {
   ChevronDown, 
   ArrowRight,
   Store,
-  Check
+  Check,
+  Info
 } from 'lucide-react';
+
+interface NavLinkItem {
+  label: string;
+  href: string;
+  disabled?: boolean;
+  badge?: string;
+}
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -21,6 +29,16 @@ export default function Navbar() {
   const [activeTextSize, setActiveTextSize] = useState<'sm' | 'base' | 'lg'>('base');
   const [selectedLang, setSelectedLang] = useState('English');
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Text resize handler for accessibility
   const handleResize = (size: 'sm' | 'base' | 'lg') => {
@@ -36,12 +54,32 @@ export default function Navbar() {
     }
   };
 
-  const navLinks = [
+  const navLinks: NavLinkItem[] = [
     { label: 'Verify Scale', href: '/audit' },
-    { label: 'Dashboard', href: '/portal' },
-    { label: 'LMO Field Portal', href: '/portal' },
+    { label: 'Dashboard', href: '#', disabled: true },
+    { label: 'LMO Field Portal', href: '#', disabled: true, badge: 'In Dev' },
     { label: 'FAQ', href: '/#faq' },
   ];
+
+  const handleLinkClick = (e: React.MouseEvent, link: NavLinkItem) => {
+    if (link.disabled) {
+      e.preventDefault();
+      setToastMessage(`${link.label}: Module under construction`);
+      if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+      toastTimeoutRef.current = setTimeout(() => setToastMessage(null), 2500);
+    }
+  };
+
+  const handleMobileLinkClick = (e: React.MouseEvent, link: NavLinkItem) => {
+    if (link.disabled) {
+      e.preventDefault();
+      setToastMessage(`${link.label}: Module under construction`);
+      if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+      toastTimeoutRef.current = setTimeout(() => setToastMessage(null), 2500);
+    } else {
+      setMobileMenuOpen(false);
+    }
+  };
 
   const languages = [
     { code: 'en', label: 'English' },
@@ -52,7 +90,15 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="w-full font-sans">
+    <header className="w-full font-sans relative">
+      {/* Non-intrusive Toast Notification for disabled modules */}
+      {toastMessage && (
+        <div className="fixed top-12 left-1/2 -translate-x-1/2 z-50 bg-zinc-900/95 text-white text-xs px-4 py-2 rounded-full shadow-lg border border-zinc-700/60 backdrop-blur-md flex items-center space-x-2 animate-in fade-in slide-in-from-top-2 duration-150">
+          <Info className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+          <span className="font-medium">{toastMessage}</span>
+        </div>
+      )}
+
       {/* ========================================================================= */}
       {/* TIER 1: THE AUTHORITY STRIP (Govt. Authority & Accessibility Bar)          */}
       {/* ========================================================================= */}
@@ -188,18 +234,24 @@ export default function Navbar() {
             {/* Center: Horizontal Navigation Links (Desktop) */}
             <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
               {navLinks.map((link) => {
-                const isActive = pathname === link.href;
+                const isActive = !link.disabled && pathname === link.href;
                 return (
                   <Link
                     key={link.label}
                     href={link.href}
-                    className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    onClick={(e) => handleLinkClick(e, link)}
+                    className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-colors inline-flex items-center ${
                       isActive
                         ? 'text-emerald-700 bg-emerald-50 font-semibold'
                         : 'text-zinc-700 hover:text-emerald-600 hover:bg-slate-50'
                     }`}
                   >
-                    {link.label}
+                    <span>{link.label}</span>
+                    {link.badge && (
+                      <span className="ml-1.5 text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200 px-1.5 py-0.5 rounded-full leading-none">
+                        {link.badge}
+                      </span>
+                    )}
                   </Link>
                 );
               })}
@@ -241,19 +293,24 @@ export default function Navbar() {
           <div className="md:hidden border-t border-slate-200 bg-white/98 backdrop-blur-lg px-4 pt-3 pb-6 space-y-2 animate-in slide-in-from-top-3 duration-200 shadow-lg">
             <div className="space-y-1">
               {navLinks.map((link) => {
-                const isActive = pathname === link.href;
+                const isActive = !link.disabled && pathname === link.href;
                 return (
                   <Link
                     key={link.label}
                     href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`block px-3 py-2.5 rounded-lg text-base font-medium transition-colors ${
+                    onClick={(e) => handleMobileLinkClick(e, link)}
+                    className={`px-3 py-2.5 rounded-lg text-base font-medium transition-colors flex items-center justify-between ${
                       isActive
                         ? 'text-emerald-700 bg-emerald-50 font-semibold'
                         : 'text-zinc-700 hover:text-emerald-600 hover:bg-slate-50'
                     }`}
                   >
-                    {link.label}
+                    <span>{link.label}</span>
+                    {link.badge && (
+                      <span className="text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full leading-none">
+                        {link.badge}
+                      </span>
+                    )}
                   </Link>
                 );
               })}

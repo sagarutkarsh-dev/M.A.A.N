@@ -38,7 +38,7 @@
 ---
 
 ## 📂 Repository Structure
-''' text 
+'''text 
 M.A.A.N/
 ├── frontend/      # Next.js 14 Web (Public QR View, Trader Portal, Admin Console)
 ├── backend/       # FastAPI Core (MPE Engine, Rule 27 FSM, Dynamic Billing)

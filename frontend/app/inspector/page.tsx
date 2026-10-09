@@ -475,10 +475,8 @@ export default function InspectorFieldClientPage() {
             <div className="flex items-center justify-between">
               {/* Officer Identification Block */}
               <div className="flex items-center space-x-2.5">
-                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 shadow-md flex items-center justify-center flex-shrink-0">
-                  <div className="w-full h-full bg-slate-900 dark:bg-slate-950 rounded-[14px] flex items-center justify-center">
-                    <Scale className="w-5 h-5 text-emerald-400" />
-                  </div>
+                <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300/60 dark:border-emerald-800/60 flex items-center justify-center shadow-xs">
+                  <Scale className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
                 </div>
 
                 <div>
@@ -486,7 +484,7 @@ export default function InspectorFieldClientPage() {
                     <h1 className="text-sm font-black text-slate-900 dark:text-white tracking-tight">
                       Inspector #408
                     </h1>
-                    <span className="text-[10px] font-mono font-bold bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30 px-1.5 py-0.2 rounded-md">
+                    <span className="text-[10px] font-mono font-bold bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-1.5 py-0.5 rounded-md">
                       Kozhikode S.
                     </span>
                   </div>
@@ -503,7 +501,7 @@ export default function InspectorFieldClientPage() {
                 <button
                   onClick={() => setDirectivesOpen(true)}
                   title="View Official Directives & Orders"
-                  className="w-10 h-10 rounded-2xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-750 border border-slate-200 dark:border-slate-700/80 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white transition-all relative active:scale-95 shadow-sm"
+                  className="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white transition-all relative active:scale-95 shadow-sm"
                   aria-label="Directives Notification"
                 >
                   <Bell className="w-4 h-4 text-slate-700 dark:text-slate-200" />
@@ -540,7 +538,7 @@ export default function InspectorFieldClientPage() {
           <div className="p-4 space-y-3 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-900 transition-colors">
             {/* Search Box on top with standard border */}
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={searchQuery}

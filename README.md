@@ -17,9 +17,11 @@
 
 ## ⚙️ Core Architecture & Statutory Engines
 
-* **Algorithmic MPE Tolerance Engine:** Hardcodes statutory Maximum Permissible Error (MPE) curves for NAWI Classes I–IV (Seventh Schedule, Table 20). Automatically evaluates test loads against true pre-rounding error ($P = I + 0.5e - \Delta L$) and applies the statutory $2\times \text{MPE}$ multiplier for field inspections.
-* **Rule 27 Lifecycle State Machine (FSM):** Enforces statutory cadences (12m for weighbridges/pumps, 24m for general weights/measures, 60m for storage tanks) with automated invalidation triggers upon unauthorized dismantling (**Rule 27(3)**) or repair (**Rule 27(4)**).
-* **3-Layer Anti-Fraud Hardware Binding:** Prevents scale cloning through a 3-way cryptographic match:
+* **Algorithmic MPE Tolerance Engine:** Rule-Based MPE Engine: Implements the applicable statutory MPE and verification/inspection test procedures for supported instrument categories, including NAWI Classes I–IV, based on the relevant provisions of the Legal Metrology (General) Rules, 2011.
+  Automatically evaluates test loads against true pre-rounding error ($P = I + 0.5e - \Delta L$) and applies the statutory $2\times \text{MPE}$ multiplier for field inspections.
+* **Rule 27 Lifecycle State Machine (FSM):** Rule 27 Lifecycle Engine: Automatically determines the applicable reverification interval based on instrument category and applicable statutory/state rules, with support for Rule 27 re-verification triggers following dismantling or repair. Lifecycle Compliance Engine flags instruments requiring re-verification and prevents issuance/continued digital compliance status until the required verification is completed.
+  
+* **3-Layer Anti-Fraud Hardware Binding:** Helps detect instrument identity mismatches and potential scale-cloning fraud:
   1. *Physical Foil Hologram Sticker ID* (`HOLO-992`)
   2. *Machine-Engraved Metal Chassis Serial* (via on-device Google ML Kit OCR)
   3. *Internal Digital EEPROM Calibration Counter Sync*
@@ -38,10 +40,11 @@
 ---
 
 ## 📂 Repository Structure
-'''text 
+```text 
 M.A.A.N/
 ├── frontend/      # Next.js 14 Web (Public QR View, Trader Portal, Admin Console)
 ├── backend/       # FastAPI Core (MPE Engine, Rule 27 FSM, Dynamic Billing)
 ├── mobile-lmo/    # Flutter Offline-First Field Inspection Client
-└── docs/          # Statutory Schemas, Database DDLs & Rule Specifications---
-*Developed by Team Tech Titans (NIT Calicut) for SIH 2026.* '''
+└── docs/          # Statutory Schemas, Database DDLs & Rule Specifications
+*Developed by Team Tech Titans (NIT Calicut) for SIH 2026.*
+```

@@ -57,7 +57,7 @@ export default function Navbar() {
   const navLinks: NavLinkItem[] = [
     { label: 'Verify Scale', href: '/audit' },
     { label: 'Dashboard', href: '#', disabled: true },
-    { label: 'LMO Field Portal', href: '#', disabled: true, badge: 'In Dev' },
+    { label: 'LMO Field Client', href: '/inspector', badge: 'Field Desk' },
     { label: 'FAQ', href: '/#faq' },
   ];
 

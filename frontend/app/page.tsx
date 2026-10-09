@@ -69,8 +69,8 @@ export default function Home() {
               <Smartphone className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold text-zinc-900 mb-2">LMO Field Mobile Client</h3>
-            <p className="text-sm text-slate-500 mb-6">Offline-first Flutter client. Capture chassis OCR, foil holograms, and turning point data in the field.</p>
-            <a href="#" className="text-amber-600 text-sm font-semibold hover:text-amber-700">Download APK &rarr;</a>
+            <p className="text-sm text-slate-500 mb-6">Field enforcement client. Offline-ready sync, optical reticle scanner for foil holograms, and spot e-Challans.</p>
+            <Link href="/inspector" className="text-amber-600 text-sm font-semibold hover:text-amber-700">Open Field Client &rarr;</Link>
           </div>
 
         </div>

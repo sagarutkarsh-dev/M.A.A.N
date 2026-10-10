@@ -1,6 +1,7 @@
 # Dependencies & Environments
 node_modules/
 .next/
+out/
 dist/
 build/
 __pycache__/

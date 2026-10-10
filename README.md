@@ -40,11 +40,23 @@
 ---
 
 ## 📂 Repository Structure
-```text 
-M.A.A.N/
-├── frontend/      # Next.js 14 Web (Public QR View, Trader Portal, Admin Console)
-├── backend/       # FastAPI Core (MPE Engine, Rule 27 FSM, Dynamic Billing)
-├── mobile-lmo/    # Flutter Offline-First Field Inspection Client
-└── docs/          # Statutory Schemas, Database DDLs & Rule Specifications
-*Developed by Team Tech Titans (NIT Calicut) for SIH 2026.*
-```
+## Project Architecture
+
+The application follows a modular, domain-driven structure adhering to Next.js App Router best practices. Business logic and UI components are strictly separated to ensure the dashboard remains maintainable.
+
+```text
+frontend/
+├── app/
+│   └── inspector/
+│       ├── login/page.tsx      # Auth orchestrator
+│       └── page.tsx            # Field Inspector dashboard orchestrator
+├── components/
+│   ├── inspector/              # Domain-specific modules (Modals, Nav, Cards)
+│   └── ui/                     # Reusable design system (Buttons, Badges)
+├── hooks/                      
+│   ├── useInspector.ts         # Centralized state logic for field actions
+│   └── useInspectorAuth.ts     # Session and login management
+├── lib/                      
+│   ├── data.ts                 # Mock fixtures and type definitions
+│   └── utils.ts                # Shared helper functions
+└── public/

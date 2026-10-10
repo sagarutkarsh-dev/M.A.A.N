@@ -1,0 +1,13 @@
+{
+  "name": "maan",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "cd frontend && npm run build",
+    "mobile:sync": "cd frontend && npm run build && cd .. && npx cap sync"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.6.9",
+    "@capacitor/cli": "^7.6.9",
+    "@capacitor/core": "^7.6.9"
+  }
+}

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "mobile:sync": "next build && npx cap sync"
   },
   "dependencies": {
     "lucide-react": "^1.50.0",

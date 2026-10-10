@@ -28,6 +28,12 @@ interface CertificateData {
   wire_seal_photo_url?: string | null;
 }
 
+export async function generateStaticParams() {
+  return [
+    { token: 'demo' },
+  ];
+}
+
 export default async function CitizenVerificationPage({ params }: { params: { token: string } }) {
   const certData = await fetchCertificateData(params.token);
 
